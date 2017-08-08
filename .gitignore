@@ -1,0 +1,11 @@
+/app/config/parameters.yml
+/build/
+/phpunit.xml
+/var/*
+/vendor/*
+/web/bundles/
+/tests/*
+/bin/*
+/.idea/*
+/phpunit.xml.dist
+/src/AppBundle/Command
