@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\ImportWorkflow;
+namespace AppBundle\Service\ImportWorkflowService;
 
 interface ImportWorkflowInterface
 {

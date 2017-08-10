@@ -5,5 +5,8 @@ parameters:
 
 services:
      import_workflow:
-         class: AppBundle\Service\ImportWorkflow\ImportWorkflow
+         class: AppBundle\Service\ImportWorkflowService\ImportWorkflow
+         autowire: true
+     validator:
+         class: AppBundle\Service\ValidatorService\ValidatorService
          autowire: true
