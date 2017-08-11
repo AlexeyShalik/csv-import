@@ -24,12 +24,13 @@ class DataImportCommand extends ContainerAwareCommand
         $io->title('Welcome to database data importer!');
         
         $importService = $this->getContainer()->get('import_workflow');
-       // $io->text();
         try {
             $importService->process();
             $io->newLine();
             $io->success('Done!');
             $io->section('Successfully imported '.$importService->getSuccessCount().' of '.$importService->getTotalRowsCount().' rows');
+            $errors = $importService->getError();
+            $this->logResults('Rows, which duplicate or may contain type errors', $errors, $io);
            // $this->logResults('Rows, which are not accepted according to import rules', $dataLog['skipped'], $io)
           //      ->logResults('Rows, which duplicate or may contain type errors', $dataLog['invalid'], $io);
         } catch (\Exception $e) {
@@ -39,6 +40,10 @@ class DataImportCommand extends ContainerAwareCommand
 
     protected function logResults($message, $data, $io)
     {
-
+        $io->text($message.' ['.count($data).']: ');
+        foreach ($data as $row)
+        {
+            $io->text('Product Code: '.$row['Product Code']);
+        }
     }
 }

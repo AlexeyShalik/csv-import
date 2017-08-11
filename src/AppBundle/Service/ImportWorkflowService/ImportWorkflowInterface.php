@@ -9,4 +9,6 @@ interface ImportWorkflowInterface
     public function getSuccessCount();
 
     public function getTotalRowsCount();
+
+    public function getError();
 }

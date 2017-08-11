@@ -10,3 +10,9 @@ services:
      validator:
          class: AppBundle\Service\ValidatorService\ValidatorService
          autowire: true
+     rules_filter:
+         class: AppBundle\Service\RulesService\RulesService
+         autowire: true
+     create_product:
+         class: AppBundle\Service\CreateProductService\CreateProductService
+         autowire: true
