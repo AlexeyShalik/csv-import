@@ -2,19 +2,12 @@
 
 namespace AppBundle\Service\ValidatorService;
 
-use Symfony\Component\DependencyInjection\Container;
-
 class ValidatorService implements ValidatorServiceInterface
 {
-    public function test()
-    {
-        return 'test';
-    }
-
     /**
      * Returns \DateTime() or null, which transforms 'discountinued' field.
      *
-     * @return \Closure
+     * @return \DateTime() or null
      */
     public function getDiscontinuedConverter($input)
     {
@@ -28,12 +21,22 @@ class ValidatorService implements ValidatorServiceInterface
     /**
      * Returns float number from the input 'cost' string field.
      *
-     * @return \Closure
+     * @return float
      */
     public function getCostConverter($input)
     {
             $matches = [];
             preg_match('#([0-9\.]+)#', $input, $matches);
             return (count($matches) > 0) ? floatval($matches[0]) : 0;
+    }
+
+    /**
+     * Returns extracts an integer number from the input 'stock' string field.
+     *
+     * @return integer or null
+     */
+    public function getStockConverter($input)
+    {
+            return (strlen($input) > 0 && is_numeric($input)) ? intval($input) : null;
     }
 }

@@ -26,7 +26,7 @@ class DataImportCommand extends ContainerAwareCommand
         $importService = $this->getContainer()->get('import_workflow');
        // $io->text();
         try {
-            $result = $importService->process();
+            $importService->process();
             $io->newLine();
             $io->success('Done!');
             $io->section('Successfully imported '.$importService->getSuccessCount().' of '.$importService->getTotalRowsCount().' rows');
