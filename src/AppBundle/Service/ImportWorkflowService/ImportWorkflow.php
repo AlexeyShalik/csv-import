@@ -13,6 +13,19 @@ class ImportWorkflow implements ImportWorkflowInterface
     private $allRows;
     private $error;
     private $container;
+    private $keys;
+    private $skipped;
+    private $file;
+
+    /**
+     * Initializes.
+     *
+     * @param $filePath
+     */
+    public function initialize($filePath)
+    {
+        $this->file = $filePath;
+    }
 
     public function __construct(EntityManager $em, Container $container)
     {
@@ -20,19 +33,8 @@ class ImportWorkflow implements ImportWorkflowInterface
         $this->em = $em;
         $this->error = [];
         $this->success = [];
-    }
-
-    public function process()
-    {
-        $csv = Reader::createFromPath('web/stock/stock.csv');
-        $csv->setOffset(1);
-        $this->allRows = count($csv->fetchAll());
-        
-        $validator = $this->container->get('validator');
-        $createProduct = $this->container->get('create_product');
-        $rulesFilter = $this->container->get('rules_filter');
-
-        $keys = [
+        $this->skipped = [];
+        $this->keys = [
             'Product Code',
             'Product Name',
             'Product Description',
@@ -40,7 +42,20 @@ class ImportWorkflow implements ImportWorkflowInterface
             'Cost in GBP',
             'Discontinued'
         ];
+    }
 
+    /**
+     * Executes import process.
+     */
+    public function process()
+    {
+        $csv = Reader::createFromPath($this->file);
+        $this->allRows = count($csv->setOffset(1)->fetchAll());
+        
+        $validator = $this->container->get('validator');
+        $createProduct = $this->container->get('create_product');
+        $rulesFilter = $this->container->get('rules_filter');
+        
         $handleRow = function ($row) use ($validator) {
             $row['Stock'] = $validator->getStockConverter($row['Stock']);
             $row['Cost in GBP'] = $validator->getCostConverter($row['Cost in GBP']);
@@ -48,12 +63,13 @@ class ImportWorkflow implements ImportWorkflowInterface
             return $row;
         };
 
-        foreach ($csv->setOffset(1)->fetchAssoc($keys, $handleRow) as $row) {
+        foreach ($csv->setOffset(1)->fetchAssoc($this->keys, $handleRow) as $row) {
             $rulesFilter->process($row);
         }
 
         $this->error = $rulesFilter->getError();
         $this->success = $rulesFilter->getSuccess();
+        $this->skipped = $rulesFilter->getSkipped();
         
         foreach ($this->success as $row)
         {
@@ -64,18 +80,35 @@ class ImportWorkflow implements ImportWorkflowInterface
         $this->em->flush();
     }
 
+    /**
+     * @return int
+     */
     public function getSuccessCount()
     {
         return count($this->success);
     }
-    
+
+    /**
+     * @return int
+     */
     public function getTotalRowsCount()
     {
         return $this->allRows;
     }
 
+    /**
+     * @return array
+     */
     public function getError()
     {
         return $this->error;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSkipped()
+    {
+        return $this->skipped;
     }
 }

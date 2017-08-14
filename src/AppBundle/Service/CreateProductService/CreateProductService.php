@@ -6,6 +6,13 @@ use AppBundle\Entity\Product;
 
 class CreateProductService implements CreateProductServiceInterface
 {
+    /**
+     * Create product object.
+     *
+     * @param $row
+     * 
+     * @return object
+     */
     public function createProduct($row)
     {
         $product = new Product();

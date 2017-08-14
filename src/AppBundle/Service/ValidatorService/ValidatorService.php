@@ -7,6 +7,8 @@ class ValidatorService implements ValidatorServiceInterface
     /**
      * Returns \DateTime() or null, which transforms 'discountinued' field.
      *
+     * @param $input
+     *
      * @return \DateTime() or null
      */
     public function getDiscontinuedConverter($input)
@@ -21,6 +23,8 @@ class ValidatorService implements ValidatorServiceInterface
     /**
      * Returns float number from the input 'cost' string field.
      *
+     * @param $input
+     *
      * @return float
      */
     public function getCostConverter($input)
@@ -32,6 +36,8 @@ class ValidatorService implements ValidatorServiceInterface
 
     /**
      * Returns extracts an integer number from the input 'stock' string field.
+     *
+     * @param $input
      *
      * @return integer or null
      */

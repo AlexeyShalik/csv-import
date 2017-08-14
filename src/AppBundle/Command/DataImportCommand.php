@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 
 class DataImportCommand extends ContainerAwareCommand
 {
@@ -16,23 +17,27 @@ class DataImportCommand extends ContainerAwareCommand
             ->setDescription('A simple console command that imports data into mysql database')
             ->setHelp('You may execute csv-import!')
         ;
+        $this->addArgument('filename', InputArgument::REQUIRED, 'Specify the file you want to import');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
         $io->title('Welcome to database data importer!');
-        
+        $io->section('Importing '.$input->getArgument('filename').' into the database...');
+
         $importService = $this->getContainer()->get('import_workflow');
+        $importService->initialize($input->getArgument('filename'));
+        
         try {
             $importService->process();
             $io->newLine();
             $io->success('Done!');
             $io->section('Successfully imported '.$importService->getSuccessCount().' of '.$importService->getTotalRowsCount().' rows');
             $errors = $importService->getError();
-            $this->logResults('Rows, which duplicate or may contain type errors', $errors, $io);
-           // $this->logResults('Rows, which are not accepted according to import rules', $dataLog['skipped'], $io)
-          //      ->logResults('Rows, which duplicate or may contain type errors', $dataLog['invalid'], $io);
+            $skipped = $importService->getSkipped();
+            $this->logResults('Rows, which are not accepted according to import rules', $skipped, $io)
+                ->logResults('Rows, which duplicate', $errors, $io);
         } catch (\Exception $e) {
             $io->error($e->getMessage());
         }
@@ -45,5 +50,7 @@ class DataImportCommand extends ContainerAwareCommand
         {
             $io->text('Product Code: '.$row['Product Code']);
         }
+        $io->newLine();
+        return $this;
     }
 }
