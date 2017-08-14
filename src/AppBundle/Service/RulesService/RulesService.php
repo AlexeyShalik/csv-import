@@ -30,6 +30,8 @@ class RulesService implements RulesServiceInterface
      * Executes rule fit process.
      *
      * @param $row
+     * 
+     * @return $this
      */
     public function process($row)
     {
@@ -41,6 +43,8 @@ class RulesService implements RulesServiceInterface
         }
        
         array_push($this->keys, $row['Product Code']);
+        
+        return $this;
     }
 
     /**

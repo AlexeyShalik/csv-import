@@ -16,6 +16,7 @@ class ImportWorkflow implements ImportWorkflowInterface
     private $keys;
     private $skipped;
     private $file;
+    private $testMode = false;
 
     /**
      * Initializes.
@@ -46,6 +47,8 @@ class ImportWorkflow implements ImportWorkflowInterface
 
     /**
      * Executes import process.
+     * 
+     * return $this
      */
     public function process()
     {
@@ -66,20 +69,36 @@ class ImportWorkflow implements ImportWorkflowInterface
         foreach ($csv->setOffset(1)->fetchAssoc($this->keys, $handleRow) as $row) {
             $rulesFilter->process($row);
         }
-
+        
         $this->error = $rulesFilter->getError();
         $this->success = $rulesFilter->getSuccess();
         $this->skipped = $rulesFilter->getSkipped();
         
-        foreach ($this->success as $row)
-        {
-            $product = $createProduct->createProduct($row);
-            $this->em->persist($product);
-        }
+        if($this->testMode != true) {
+            foreach ($this->success as $row) {
+                $product = $createProduct->createProduct($row);
+                $this->em->persist($product);
+            }
 
-        $this->em->flush();
+            $this->em->flush();
+        }
+        
+        return $this;
     }
 
+    /**
+     * Enables "test" mode: data is processed in the same way, but not inserted into a database.
+     *
+     * @param $mode
+     *
+     * @return $this
+     */
+    public function setTestMode($mode)
+    {
+        $this->testMode = $mode;
+        return $this;
+    }
+    
     /**
      * @return int
      */

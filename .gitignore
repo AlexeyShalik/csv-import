@@ -4,7 +4,6 @@
 /var/*
 /vendor/*
 /web/bundles/
-/tests/*
 /bin/*
 /.idea/*
 /phpunit.xml.dist
