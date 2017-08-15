@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\RulesService;
 
-interface RulesServiceInterface 
+interface RulesServiceInterface
 {
     /**
      * Executes rule fit process.

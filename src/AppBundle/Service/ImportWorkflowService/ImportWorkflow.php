@@ -47,7 +47,7 @@ class ImportWorkflow implements ImportWorkflowInterface
 
     /**
      * Executes import process.
-     * 
+     *
      * return $this
      */
     public function process()
@@ -74,7 +74,7 @@ class ImportWorkflow implements ImportWorkflowInterface
         $this->success = $rulesFilter->getSuccess();
         $this->skipped = $rulesFilter->getSkipped();
         
-        if($this->testMode != true) {
+        if ($this->testMode != true) {
             foreach ($this->success as $row) {
                 $product = $createProduct->createProduct($row);
                 $this->em->persist($product);

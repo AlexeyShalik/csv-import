@@ -33,7 +33,7 @@ class ProductFilterTest extends TestCase
                     'Product Description' => '32” Tv',
                     'Stock' => 10,
                     'Cost in GBP' => 399.99]
-            ]  
+            ]
         ];
     }
     

@@ -13,11 +13,11 @@ class ValidatorService implements ValidatorServiceInterface
      */
     public function getDiscontinuedConverter($input)
     {
-            if ($input === 'yes') {
-                return new \DateTime();
-            } else {
-                return null;
-            }
+        if ($input === 'yes') {
+            return new \DateTime();
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -29,9 +29,9 @@ class ValidatorService implements ValidatorServiceInterface
      */
     public function getCostConverter($input)
     {
-            $matches = [];
-            preg_match('#([0-9\.]+)#', $input, $matches);
-            return (count($matches) > 0) ? floatval($matches[0]) : 0;
+        $matches = [];
+        preg_match('#([0-9\.]+)#', $input, $matches);
+        return (count($matches) > 0) ? floatval($matches[0]) : 0;
     }
 
     /**
@@ -43,6 +43,6 @@ class ValidatorService implements ValidatorServiceInterface
      */
     public function getStockConverter($input)
     {
-            return (strlen($input) > 0 && is_numeric($input)) ? intval($input) : null;
+        return (strlen($input) > 0 && is_numeric($input)) ? intval($input) : null;
     }
 }

@@ -11,9 +11,11 @@ use Symfony\Component\DependencyInjection\Container;
 class ProductWorkflowTest extends TestCase
 {
     private $aggregator;
+    private $validator;
     public function setUp()
     {
         $this->aggregator = new ImportWorkflow($this->getEntityManager(), $this->getContainer());
+        $this->validator = new ValidatorService();
     }
     
     protected function getEntityManager()
@@ -30,7 +32,7 @@ class ProductWorkflowTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         return $emMock;
-    } 
+    }
     
     public function testProcess()
     {

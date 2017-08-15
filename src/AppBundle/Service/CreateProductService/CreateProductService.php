@@ -10,7 +10,7 @@ class CreateProductService implements CreateProductServiceInterface
      * Create product object.
      *
      * @param $row
-     * 
+     *
      * @return object
      */
     public function createProduct($row)

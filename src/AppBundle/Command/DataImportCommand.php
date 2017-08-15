@@ -49,8 +49,7 @@ class DataImportCommand extends ContainerAwareCommand
     protected function logResults($message, $data, $io)
     {
         $io->text($message.' ['.count($data).']: ');
-        foreach ($data as $row)
-        {
+        foreach ($data as $row) {
             $io->text('Product Code: '.$row['Product Code']);
         }
         $io->newLine();

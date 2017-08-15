@@ -4,7 +4,6 @@ namespace AppBundle\Service\RulesService;
 
 use Symfony\Component\DependencyInjection\Container;
 
-
 class RulesService implements RulesServiceInterface
 {
     const MINIMAL_COST = 5;
@@ -12,7 +11,7 @@ class RulesService implements RulesServiceInterface
     const MINIMAL_STOCK = 10;
 
     private $errors;
-    private $success;    
+    private $success;
     private $container;
     private $keys;
     private $skipped;
@@ -30,14 +29,15 @@ class RulesService implements RulesServiceInterface
      * Executes rule fit process.
      *
      * @param $row
-     * 
+     *
      * @return $this
      */
     public function process($row)
     {
         if ($this->ruleFits($row)) {
-            if($this->getSkippedFilter($row))
+            if ($this->getSkippedFilter($row)) {
                 array_push($this->success, $row);
+            }
         } else {
             array_push($this->skipped, $row);
         }
@@ -71,7 +71,7 @@ class RulesService implements RulesServiceInterface
      */
     public function getSkippedFilter($row)
     {
-        if(array_search($row['Product Code'], $this->keys)) {
+        if (array_search($row['Product Code'], $this->keys)) {
             array_push($this->errors, $row);
             return false;
         } else {

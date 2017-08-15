@@ -1,8 +1,8 @@
 <?php
 namespace AppBundle\Tests;
+
 use AppBundle\Service\ValidatorService\ValidatorService;
 use PHPUnit\Framework\TestCase;
-
 
 class ProductConverterTest extends TestCase
 {
