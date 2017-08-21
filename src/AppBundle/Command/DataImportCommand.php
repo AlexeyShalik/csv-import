@@ -31,7 +31,7 @@ class DataImportCommand extends ContainerAwareCommand
         $importService = $this->getContainer()->get('import_workflow');
         $importService->initialize($input->getArgument('filename'));
         $importService->setTestMode($input->getOption('test-mode'));
-        
+
         try {
             $importService->process();
             $io->newLine();
@@ -39,20 +39,25 @@ class DataImportCommand extends ContainerAwareCommand
             $io->section('Successfully imported '.$importService->getSuccessCount().' of '.$importService->getTotalRowsCount().' rows');
             $errors = $importService->getError();
             $skipped = $importService->getSkipped();
-            $this->logResults('Rows, which are not accepted according to import rules', $skipped, $io)
-                ->logResults('Rows, which duplicate', $errors, $io);
+            $this->logResults('Rows, which are not accepted according to import rules %2$s %1$d %3$s', $skipped, $io)
+                ->logResults('Rows, which duplicate %2$s %1$d %3$s', $errors, $io);
+
+            return 0;
         } catch (\Exception $e) {
             $io->error($e->getMessage());
+
+            return 1;
         }
     }
 
-    protected function logResults($message, $data, $io)
+    protected function logResults(string $message, array $data, SymfonyStyle $io) : DataImportCommand
     {
-        $io->text($message.' ['.count($data).']: ');
+        $io->text(sprintf($message, count($data), '[', ']: '));
         foreach ($data as $row) {
             $io->text('Product Code: '.$row['Product Code']);
         }
         $io->newLine();
+
         return $this;
     }
 }

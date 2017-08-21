@@ -23,7 +23,7 @@ class ImportWorkflow implements ImportWorkflowInterface
      *
      * @param $filePath
      */
-    public function initialize($filePath)
+    public function initialize($filePath) : void
     {
         $this->file = $filePath;
     }
@@ -33,56 +33,68 @@ class ImportWorkflow implements ImportWorkflowInterface
         $this->container = $container;
         $this->em = $em;
         $this->error = [];
-        $this->success = [];
         $this->skipped = [];
         $this->keys = [
-            'Product Code',
-            'Product Name',
-            'Product Description',
-            'Stock',
-            'Cost in GBP',
-            'Discontinued'
+            $this->container->getParameter('product_code'),
+            $this->container->getParameter('product_name'),
+            $this->container->getParameter('product_description'),
+            $this->container->getParameter('stock'),
+            $this->container->getParameter('cost_in_GBP'),
+            $this->container->getParameter('discontinued'),
         ];
     }
 
     /**
      * Executes import process.
      *
-     * return $this
+     * return ImportWorkflow
      */
-    public function process()
+    public function process() : ImportWorkflow
     {
         $csv = Reader::createFromPath($this->file);
         $this->allRows = count($csv->setOffset(1)->fetchAll());
-        
+
         $validator = $this->container->get('validator');
         $createProduct = $this->container->get('create_product');
         $rulesFilter = $this->container->get('rules_filter');
-        
+
         $handleRow = function ($row) use ($validator) {
-            $row['Stock'] = $validator->getStockConverter($row['Stock']);
-            $row['Cost in GBP'] = $validator->getCostConverter($row['Cost in GBP']);
-            $row['Discontinued'] = $validator->getDiscontinuedConverter($row['Discontinued']);
+            $row[$this->container->getParameter('stock')] = $validator->getStockConverter(
+                $row[$this->container->getParameter('stock')]
+            );
+            $row[$this->container->getParameter('cost_in_GBP')] = $validator->getCostConverter(
+                $row[$this->container->getParameter('cost_in_GBP')]
+            );
+            $row[$this->container->getParameter('discontinued')] = $validator->getDiscontinuedConverter(
+                $row[$this->container->getParameter('discontinued')]
+            );
+
             return $row;
         };
 
+        $batchInsert = 0;
+
         foreach ($csv->setOffset(1)->fetchAssoc($this->keys, $handleRow) as $row) {
-            $rulesFilter->process($row);
+            $data = $rulesFilter->process($row);
+            if (is_array($data)) {
+                if ($this->testMode !== true) {
+                    $product = $createProduct->createProduct($data);
+                    $this->em->persist($product);
+                    $batchInsert += 1;
+                    if ($batchInsert === 50) {
+                        $this->em->flush();
+                        $batchInsert = 0;
+                    }
+                }
+            }
         }
-        
+
+        $this->em->flush();
+
         $this->error = $rulesFilter->getError();
         $this->success = $rulesFilter->getSuccess();
         $this->skipped = $rulesFilter->getSkipped();
-        
-        if ($this->testMode != true) {
-            foreach ($this->success as $row) {
-                $product = $createProduct->createProduct($row);
-                $this->em->persist($product);
-            }
 
-            $this->em->flush();
-        }
-        
         return $this;
     }
 
@@ -91,26 +103,27 @@ class ImportWorkflow implements ImportWorkflowInterface
      *
      * @param $mode
      *
-     * @return $this
+     * @return ImportWorkflow
      */
-    public function setTestMode($mode)
+    public function setTestMode(bool $mode) : ImportWorkflow
     {
         $this->testMode = $mode;
+
         return $this;
-    }
-    
-    /**
-     * @return int
-     */
-    public function getSuccessCount()
-    {
-        return count($this->success);
     }
 
     /**
      * @return int
      */
-    public function getTotalRowsCount()
+    public function getSuccessCount() : int
+    {
+        return $this->success;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalRowsCount() : int
     {
         return $this->allRows;
     }
@@ -118,7 +131,7 @@ class ImportWorkflow implements ImportWorkflowInterface
     /**
      * @return array
      */
-    public function getError()
+    public function getError() : array
     {
         return $this->error;
     }
@@ -126,7 +139,7 @@ class ImportWorkflow implements ImportWorkflowInterface
     /**
      * @return array
      */
-    public function getSkipped()
+    public function getSkipped() : array
     {
         return $this->skipped;
     }

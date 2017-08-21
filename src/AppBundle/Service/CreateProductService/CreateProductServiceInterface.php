@@ -11,5 +11,5 @@ interface CreateProductServiceInterface
      *
      * @return object
      */
-    public function createProduct($row);
+    public function createProduct(array $row);
 }

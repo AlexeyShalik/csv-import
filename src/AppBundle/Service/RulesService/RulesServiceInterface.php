@@ -9,5 +9,5 @@ interface RulesServiceInterface
      *
      * @param $row
      */
-    public function process($row);
+    public function process(array $row);
 }

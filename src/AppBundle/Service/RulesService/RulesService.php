@@ -30,21 +30,22 @@ class RulesService implements RulesServiceInterface
      *
      * @param $row
      *
-     * @return $this
+     * @return array or null
      */
-    public function process($row)
+    public function process(array $row)
     {
         if ($this->ruleFits($row)) {
             if ($this->getSkippedFilter($row)) {
                 array_push($this->success, $row);
+                array_push($this->keys, $row[$this->container->getParameter('product_code')]);
+
+                return $row;
             }
         } else {
             array_push($this->skipped, $row);
+
+            return null;
         }
-       
-        array_push($this->keys, $row['Product Code']);
-        
-        return $this;
     }
 
     /**
@@ -54,11 +55,12 @@ class RulesService implements RulesServiceInterface
      *
      * @return bool
      */
-    public function ruleFits($row)
+    public function ruleFits(array $row) : bool
     {
-        $conditionA = floatval($row['Cost in GBP']) < self::MINIMAL_COST && intval($row['Stock']) < self::MINIMAL_STOCK;
-        $conditionB = floatval($row['Cost in GBP']) > self::MAXIMAL_COST;
+        $conditionA = floatval($row[$this->container->getParameter('cost_in_GBP')]) < self::MINIMAL_COST && intval($row[$this->container->getParameter('stock')]) < self::MINIMAL_STOCK;
+        $conditionB = floatval($row[$this->container->getParameter('cost_in_GBP')]) > self::MAXIMAL_COST;
         $falseCondition = $conditionA || $conditionB;
+
         return !$falseCondition;
     }
 
@@ -69,10 +71,11 @@ class RulesService implements RulesServiceInterface
      *
      * @return bool
      */
-    public function getSkippedFilter($row)
+    public function getSkippedFilter(array $row) : bool
     {
-        if (array_search($row['Product Code'], $this->keys)) {
+        if (array_search($row[$this->container->getParameter('product_code')], $this->keys)) {
             array_push($this->errors, $row);
+
             return false;
         } else {
             return true;
@@ -82,7 +85,7 @@ class RulesService implements RulesServiceInterface
     /**
      * @return array
      */
-    public function getSkipped()
+    public function getSkipped() : array
     {
         return $this->skipped;
     }
@@ -90,16 +93,16 @@ class RulesService implements RulesServiceInterface
     /**
      * @return array
      */
-    public function getError()
+    public function getError() : array
     {
         return $this->errors;
     }
 
     /**
-     * @return array
+     * @return int
      */
-    public function getSuccess()
+    public function getSuccess() : int
     {
-        return $this->success;
+        return count($this->success);
     }
 }

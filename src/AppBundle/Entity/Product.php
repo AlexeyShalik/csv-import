@@ -1,13 +1,17 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Product.
  *
  * @ORM\Table(name="tblProductData", uniqueConstraints={@ORM\UniqueConstraint(name="strProductCode", columns={"strProductCode"})})
  * @ORM\Entity
+ * @UniqueEntity("strProductCode")
  */
 class Product
 {
@@ -26,7 +30,9 @@ class Product
     /**
      * @var int
      *
-     * @ORM\Column(name="intStock", type="integer")
+     * @ORM\Column(name="intStock", type="integer", options={"unsigned"=true})
+     *
+     * @Assert\GreaterThan(10)
      */
     private $stock;
     /**
@@ -38,7 +44,11 @@ class Product
     /**
      * @var float
      *
-     * @ORM\Column(name="dcCost", type="decimal", precision=10, scale=2)
+     * @ORM\Column(name="dcCost", type="decimal", precision=10, scale=2, options={"unsigned"=true})
+     *
+     * @Assert\GreaterThan(5)
+     *
+     * @Assert\LessThan(1000)
      */
     private $cost;
     /**
@@ -63,7 +73,7 @@ class Product
     private $id;
     public function __construct()
     {
-        $this->added = new \DateTime;
+        $this->added = new \DateTime();
     }
     /**
      * Set name.
@@ -75,6 +85,7 @@ class Product
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
     /**
@@ -96,6 +107,7 @@ class Product
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
     /**
@@ -117,6 +129,7 @@ class Product
     public function setStock($stock)
     {
         $this->stock = $stock;
+
         return $this;
     }
     /**
@@ -138,6 +151,7 @@ class Product
     public function setAdded($added)
     {
         $this->added = $added;
+
         return $this;
     }
     /**
@@ -159,6 +173,7 @@ class Product
     public function setCost($cost)
     {
         $this->cost = $cost;
+
         return $this;
     }
     /**
@@ -180,6 +195,7 @@ class Product
     public function setDiscontinued($discontinued)
     {
         $this->discontinued = $discontinued;
+
         return $this;
     }
     /**
@@ -201,6 +217,7 @@ class Product
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
     /**

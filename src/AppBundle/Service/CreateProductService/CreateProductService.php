@@ -11,9 +11,9 @@ class CreateProductService implements CreateProductServiceInterface
      *
      * @param $row
      *
-     * @return object
+     * @return Product
      */
-    public function createProduct($row)
+    public function createProduct(array $row) : Product
     {
         $product = new Product();
         $product->setCode(
@@ -34,7 +34,7 @@ class CreateProductService implements CreateProductServiceInterface
         $product->setDiscontinued(
             $row['Discontinued']
         );
-        
+
         return $product;
     }
 }

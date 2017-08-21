@@ -1,18 +1,19 @@
 <?php
+
 namespace AppBundle\Tests;
 
 use AppBundle\Service\ValidatorService\ValidatorService;
 use PHPUnit\Framework\TestCase;
 
-class ProductConverterTest extends TestCase
+class ValidatorServiceTest extends TestCase
 {
     private $aggregator;
-    
+
     public function setUp()
     {
         $this->aggregator = new ValidatorService();
     }
-    
+
     public function discontinuedConverterProvider()
     {
         return [
@@ -22,7 +23,7 @@ class ProductConverterTest extends TestCase
             [false, '12qefsfdg'],
         ];
     }
-    
+
     /**
      * @dataProvider discontinuedConverterProvider
      *

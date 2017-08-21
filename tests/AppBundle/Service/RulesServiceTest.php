@@ -6,10 +6,10 @@ use AppBundle\Service\RulesService\RulesService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 
-class ProductFilterTest extends TestCase
+class RulesServiceTest extends TestCase
 {
     private $aggregator;
-    
+
     public function setUp()
     {
         $this->aggregator = new RulesService($this->getContainer());
@@ -20,9 +20,10 @@ class ProductFilterTest extends TestCase
         $emMock = $this->getMockBuilder(Container::class)
             ->disableOriginalConstructor()
             ->getMock();
+
         return $emMock;
     }
-    
+
     public function ruleFitsProvider()
     {
         return [
@@ -32,11 +33,11 @@ class ProductFilterTest extends TestCase
                     'Product Name' => 'TV',
                     'Product Description' => '32” Tv',
                     'Stock' => 10,
-                    'Cost in GBP' => 399.99]
-            ]
+                    'Cost in GBP' => 399.99, ],
+            ],
         ];
     }
-    
+
     /**
      * @dataProvider ruleFitsProvider
      *
@@ -46,6 +47,39 @@ class ProductFilterTest extends TestCase
     public function testRuleFits($result, $input)
     {
         $converter = $this->aggregator->ruleFits($input);
+        $this->assertEquals($result, $converter);
+    }
+
+    public function processProvider()
+    {
+        return [
+            [
+                [
+                    'Product Code' => 'P0001',
+                    'Product Name' => 'TV',
+                    'Product Description' => '32” Tv',
+                    'Stock' => 10,
+                    'Cost in GBP' => 399.99,
+                ], [
+                    'Product Code' => 'P0001',
+                    'Product Name' => 'TV',
+                    'Product Description' => '32” Tv',
+                    'Stock' => 10,
+                    'Cost in GBP' => 399.99,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider processProvider
+     *
+     * @param $result
+     * @param $input
+     */
+    public function testProcess($result, $input)
+    {
+        $converter = $this->aggregator->process($input);
         $this->assertEquals($result, $converter);
     }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Service\ValidatorService;
 
@@ -19,7 +19,7 @@ class ValidatorService implements ValidatorServiceInterface
             return null;
         }
     }
-    
+
     /**
      * Returns float number from the input 'cost' string field.
      *
@@ -27,10 +27,11 @@ class ValidatorService implements ValidatorServiceInterface
      *
      * @return float
      */
-    public function getCostConverter($input)
+    public function getCostConverter($input) : float
     {
         $matches = [];
         preg_match('#([0-9\.]+)#', $input, $matches);
+
         return (count($matches) > 0) ? floatval($matches[0]) : 0;
     }
 
@@ -39,7 +40,7 @@ class ValidatorService implements ValidatorServiceInterface
      *
      * @param $input
      *
-     * @return integer or null
+     * @return int or null
      */
     public function getStockConverter($input)
     {
