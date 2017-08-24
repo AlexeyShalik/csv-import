@@ -11,10 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="tblProductData", uniqueConstraints={@ORM\UniqueConstraint(name="strProductCode", columns={"strProductCode"})})
  * @ORM\Entity
- * @Assert\Expression(
- *     "this.getCost() >= 5 or this.getStock() >= 10",
- *     message="Cost should be more or equals 5 and Stock should be more or equals 10", groups={"costAndStockConstraint"}
- * )
+ * @UniqueEntity("strProductCode")
  */
 class Product
 {
@@ -85,7 +82,7 @@ class Product
      *
      * @return Product
      */
-    public function setName($name) : Product
+    public function setName($name)
     {
         $this->name = $name;
 
@@ -96,7 +93,7 @@ class Product
      *
      * @return string
      */
-    public function getName() : string
+    public function getName()
     {
         return $this->name;
     }
@@ -107,7 +104,7 @@ class Product
      *
      * @return Product
      */
-    public function setCode($code) : Product
+    public function setCode($code)
     {
         $this->code = $code;
 
@@ -118,7 +115,7 @@ class Product
      *
      * @return string
      */
-    public function getCode() : string
+    public function getCode()
     {
         return $this->code;
     }
@@ -138,7 +135,7 @@ class Product
     /**
      * Get stock.
      *
-     * @return int or null
+     * @return int
      */
     public function getStock()
     {
@@ -151,7 +148,7 @@ class Product
      *
      * @return Product
      */
-    public function setAdded($added) : Product
+    public function setAdded($added)
     {
         $this->added = $added;
 
@@ -162,7 +159,7 @@ class Product
      *
      * @return \DateTime
      */
-    public function getAdded() : \DateTime
+    public function getAdded()
     {
         return $this->added;
     }
@@ -173,7 +170,7 @@ class Product
      *
      * @return Product
      */
-    public function setCost($cost) : Product
+    public function setCost($cost)
     {
         $this->cost = $cost;
 
@@ -184,7 +181,7 @@ class Product
      *
      * @return float
      */
-    public function getCost() : float
+    public function getCost()
     {
         return $this->cost;
     }
@@ -195,7 +192,7 @@ class Product
      *
      * @return Product
      */
-    public function setDiscontinued($discontinued) : Product
+    public function setDiscontinued($discontinued)
     {
         $this->discontinued = $discontinued;
 
@@ -206,7 +203,7 @@ class Product
      *
      * @return \DateTime
      */
-    public function getDiscontinued() : \DateTime
+    public function getDiscontinued()
     {
         return $this->discontinued;
     }
@@ -217,7 +214,7 @@ class Product
      *
      * @return Product
      */
-    public function setDescription($description) : Product
+    public function setDescription($description)
     {
         $this->description = $description;
 
@@ -228,7 +225,7 @@ class Product
      *
      * @return string
      */
-    public function getDescription() : string
+    public function getDescription()
     {
         return $this->description;
     }
@@ -237,7 +234,7 @@ class Product
      *
      * @return int
      */
-    public function getId() : int
+    public function getId()
     {
         return $this->id;
     }
