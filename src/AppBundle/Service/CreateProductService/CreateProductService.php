@@ -3,9 +3,17 @@
 namespace AppBundle\Service\CreateProductService;
 
 use AppBundle\Entity\Product;
+use Symfony\Component\DependencyInjection\Container;
 
 class CreateProductService implements CreateProductServiceInterface
 {
+    private $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * Create product object.
      *
@@ -17,22 +25,22 @@ class CreateProductService implements CreateProductServiceInterface
     {
         $product = new Product();
         $product->setCode(
-            $row['Product Code']
+            $row[$this->container->getParameter('product_code')]
         );
         $product->setName(
-            $row['Product Name']
+            $row[$this->container->getParameter('product_name')]
         );
         $product->setDescription(
-            $row['Product Description']
+            $row[$this->container->getParameter('product_description')]
         );
         $product->setStock(
-            $row['Stock']
+            $row[$this->container->getParameter('stock')]
         );
         $product->setCost(
-            $row['Cost in GBP']
+            $row[$this->container->getParameter('cost_in_GBP')]
         );
         $product->setDiscontinued(
-            $row['Discontinued']
+            $row[$this->container->getParameter('discontinued')]
         );
 
         return $product;

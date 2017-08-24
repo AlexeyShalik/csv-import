@@ -22,7 +22,12 @@ class DataImportCommand extends ContainerAwareCommand
         $this->addOption('test-mode', 'test', InputOption::VALUE_NONE);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
         $io->title('Welcome to database data importer!');
@@ -50,6 +55,12 @@ class DataImportCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param string $message
+     * @param array $data
+     * @param SymfonyStyle $io
+     * @return DataImportCommand
+     */
     protected function logResults(string $message, array $data, SymfonyStyle $io) : DataImportCommand
     {
         $io->text(sprintf($message, count($data), '[', ']: '));

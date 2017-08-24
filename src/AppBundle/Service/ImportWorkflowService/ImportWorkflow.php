@@ -16,7 +16,8 @@ class ImportWorkflow implements ImportWorkflowInterface
     private $keys;
     private $skipped;
     private $file;
-    private $testMode = false;
+    private $isTestMode = false;
+    const LIMIT_ENTITIES = 50;
 
     /**
      * Initializes.
@@ -77,11 +78,11 @@ class ImportWorkflow implements ImportWorkflowInterface
         foreach ($csv->setOffset(1)->fetchAssoc($this->keys, $handleRow) as $row) {
             $data = $rulesFilter->process($row);
             if (is_array($data)) {
-                if ($this->testMode !== true) {
+                if ($this->isTestMode !== true) {
                     $product = $createProduct->createProduct($data);
                     $this->em->persist($product);
-                    $batchInsert += 1;
-                    if ($batchInsert === 50) {
+                    $batchInsert++;
+                    if ($batchInsert === self::LIMIT_ENTITIES) {
                         $this->em->flush();
                         $batchInsert = 0;
                     }
@@ -107,7 +108,7 @@ class ImportWorkflow implements ImportWorkflowInterface
      */
     public function setTestMode(bool $mode) : ImportWorkflow
     {
-        $this->testMode = $mode;
+        $this->isTestMode = $mode;
 
         return $this;
     }
