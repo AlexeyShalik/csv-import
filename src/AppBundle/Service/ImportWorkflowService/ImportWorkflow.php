@@ -78,7 +78,7 @@ class ImportWorkflow implements ImportWorkflowInterface
         foreach ($csv->setOffset(1)->fetchAssoc($this->keys, $handleRow) as $row) {
             $data = $rulesFilter->process($row);
             if (is_array($data)) {
-                if ($this->isTestMode !== true) {
+                if (!$this->isTestMode) {
                     $product = $createProduct->createProduct($data);
                     $this->em->persist($product);
                     $batchInsert++;
