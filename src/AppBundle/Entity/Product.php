@@ -86,7 +86,7 @@ class Product
      *
      * @return Product
      */
-    public function setName($name) : Product
+    public function setName(string $name) : Product
     {
         $this->name = $name;
 
@@ -108,7 +108,7 @@ class Product
      *
      * @return Product
      */
-    public function setCode($code) : Product
+    public function setCode(string $code) : Product
     {
         $this->code = $code;
 
@@ -130,7 +130,7 @@ class Product
      *
      * @return Product
      */
-    public function setStock($stock) : Product
+    public function setStock(int $stock) : Product
     {
         $this->stock = $stock;
 
@@ -152,7 +152,7 @@ class Product
      *
      * @return Product
      */
-    public function setAdded($added) : Product
+    public function setAdded(\DataTime $added) : Product
     {
         $this->added = $added;
 
@@ -174,7 +174,7 @@ class Product
      *
      * @return Product
      */
-    public function setCost($cost) : Product
+    public function setCost(float $cost) : Product
     {
         $this->cost = $cost;
 
@@ -196,7 +196,7 @@ class Product
      *
      * @return Product
      */
-    public function setDiscontinued($discontinued) : Product
+    public function setDiscontinued(\DateTime $discontinued) : Product
     {
         $this->discontinued = $discontinued;
 
@@ -218,7 +218,7 @@ class Product
      *
      * @return Product
      */
-    public function setDescription($description) : Product
+    public function setDescription(string $description) : Product
     {
         $this->description = $description;
 
