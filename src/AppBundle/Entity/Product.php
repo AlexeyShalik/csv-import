@@ -174,7 +174,7 @@ class Product
      *
      * @return Product
      */
-    public function setCost($cost)
+    public function setCost($cost) : Product
     {
         $this->cost = $cost;
 
@@ -185,7 +185,7 @@ class Product
      *
      * @return float
      */
-    public function getCost()
+    public function getCost() : float
     {
         return $this->cost;
     }
